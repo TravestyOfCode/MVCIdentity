@@ -1,0 +1,12 @@
+﻿REGISTER.CSHTML.CS
+	Ln:22  - Why inject both UserManager and SignInManager if SignInManager contains UserManager property?
+
+	Ln:87  - Why include returnUrl value when it is not used in the ConfirmEmail action?
+
+
+
+
+
+USERMANAGER
+	Why do a lot of asycn operations not take a cancellation token?
+	  Because they get their cancellation from HttpContext.RequestAborted so no need.
