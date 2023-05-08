@@ -27,7 +27,7 @@ namespace MVCIdentity.Areas.Account.Controllers
 
         // HTTP ACTIONS ///////////////////////////////////////////////////////
         [HttpGet]
-        public async Task<IActionResult> Index([FromQuery] string email)
+        public IActionResult Index([FromQuery] string email)
         {
             return View(model: email);
         }
