@@ -3,28 +3,19 @@ using System.Collections.Generic;
 
 namespace MVCIdentity.Areas.Account.ViewModels
 {
-    public class RegisterViewModel
+    public class RegisterViewModel    
     {
-        public RegisterModel Input { get; set; }
+        // PROPERTIES /////////////////////////////////////////////////////////
+        public RegisterModel Input { get; set; } = new RegisterModel();
 
-        public IList<AuthenticationScheme> ExternalLogins { get; set; }
+        public IList<AuthenticationScheme> ExternalLogins { get; set; } = new List<AuthenticationScheme>();
 
-        public RegisterViewModel()
+        
+        // CONSTRUCTORS ///////////////////////////////////////////////////////
+        public RegisterViewModel(string returnUrl)
         {
-            ExternalLogins = new List<AuthenticationScheme>();
+            Input.ReturnUrl = returnUrl;
         }
 
-        public RegisterViewModel(IList<AuthenticationScheme> externalLogins, string returnUrl)
-        {
-            externalLogins ??= new List<AuthenticationScheme>();
-
-            ExternalLogins = externalLogins;
-
-            Input = new RegisterModel()
-            {
-                ReturnUrl = returnUrl
-            };
-            
-        }
     }
 }

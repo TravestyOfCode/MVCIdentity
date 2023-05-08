@@ -16,12 +16,15 @@ namespace MVCIdentity.Areas.Account.Controllers
     [Area("Account")]
     public class RegisterController : Controller
     {
+        // PROPERTIES /////////////////////////////////////////////////////////
         private readonly SignInManager<IdentityUser> _signInManager;
 
         private readonly ILogger<RegisterController> _logger;
 
         private readonly IEmailSender _emailSender;
 
+
+        // CONSTRUCTORS ///////////////////////////////////////////////////////
         public RegisterController(SignInManager<IdentityUser> signInManager, ILogger<RegisterController> logger, IEmailSender emailSender)
         {
             _signInManager = signInManager;
@@ -29,12 +32,12 @@ namespace MVCIdentity.Areas.Account.Controllers
             _emailSender = emailSender;
         }
 
+        
+        // HTTP ACTIONS ///////////////////////////////////////////////////////
         [HttpGet]
         public async Task<IActionResult> Index([FromQuery]string returnUrl = null)
         {
-            var externalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
-
-            return View(new RegisterViewModel(externalLogins, returnUrl));
+            return View(await GenerateViewModel(returnUrl));
         }
 
         [HttpPost]
@@ -86,11 +89,18 @@ namespace MVCIdentity.Areas.Account.Controllers
                     ModelState.TryAddModelError(string.Empty, error.Description);
                 }                
             }
+                        
+            return View(await GenerateViewModel(input.ReturnUrl));
+        }
 
-            // Something failed
-            var externalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
 
-            return View(new RegisterViewModel(externalLogins, input.ReturnUrl));
+        // PRIVATE FUNCTIONS //////////////////////////////////////////////////
+        private async Task<RegisterViewModel> GenerateViewModel(string returnUrl = null)
+        {
+            return new RegisterViewModel(returnUrl)
+            {
+                ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList()
+            };
         }
     }
 }
