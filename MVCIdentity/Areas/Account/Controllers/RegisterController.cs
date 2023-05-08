@@ -35,16 +35,14 @@ namespace MVCIdentity.Areas.Account.Controllers
         
         // HTTP ACTIONS ///////////////////////////////////////////////////////
         [HttpGet]
-        public async Task<IActionResult> Index([FromQuery]string returnUrl = null)
+        public async Task<IActionResult> Index()
         {
-            return View(await GenerateViewModel(returnUrl));
+            return View(await GenerateViewModel());
         }
 
         [HttpPost]
         public async Task<IActionResult> Index([FromForm]RegisterModel input)
         {
-            input.ReturnUrl ??= Url.Content("~/");
-            
             if(ModelState.IsValid)
             {
                 var user = new IdentityUser() { UserName = input.Email, Email = input.Email };
@@ -62,7 +60,7 @@ namespace MVCIdentity.Areas.Account.Controllers
                     var callbackUrl = Url.Action(
                         action: "Index",
                         controller: "ConfirmEmail",
-                        values: new { area = "Account", userId = user.Id, code = emailConfirmCode, returnUrl = input.ReturnUrl },
+                        values: new { area = "Account", userId = user.Id, code = emailConfirmCode },
                         protocol: Request.Scheme);
 
                     await _emailSender.SendEmailAsync(
@@ -75,12 +73,12 @@ namespace MVCIdentity.Areas.Account.Controllers
                         return RedirectToAction(
                             actionName: "Index",
                             controllerName: "RegisterConfirmation",
-                            routeValues: new { email = input.Email, returnUrl = input.ReturnUrl });
+                            routeValues: new { email = input.Email });
                     }
                     else
                     {
                         await _signInManager.SignInAsync(user, isPersistent: false);
-                        return LocalRedirect(input.ReturnUrl);
+                        return LocalRedirect("~/");
                     }
                 }
 
@@ -90,14 +88,14 @@ namespace MVCIdentity.Areas.Account.Controllers
                 }                
             }
                         
-            return View(await GenerateViewModel(input.ReturnUrl));
+            return View(await GenerateViewModel());
         }
 
 
         // PRIVATE FUNCTIONS //////////////////////////////////////////////////
-        private async Task<RegisterViewModel> GenerateViewModel(string returnUrl = null)
+        private async Task<RegisterViewModel> GenerateViewModel()
         {
-            return new RegisterViewModel(returnUrl)
+            return new RegisterViewModel()
             {
                 ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList()
             };
