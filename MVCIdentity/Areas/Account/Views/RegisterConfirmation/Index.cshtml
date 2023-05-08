@@ -1,0 +1,13 @@
+﻿@model string
+
+@{ 
+    ViewData["Title"] = "Register Confirmation";
+}
+
+<h1>@ViewData["Title"]</h1>
+
+<p>
+    An email has been sent with a link to confirm your account. 
+    
+    If you have not recieved the email check your spam folder, or <a asp-area="Account" asp-controller="RegisterConfirmation" asp-action="Resend" asp-route-email="@Model">click here</a> to resend the confirmation email.
+</p>
