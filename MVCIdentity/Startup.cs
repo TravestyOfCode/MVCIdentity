@@ -43,8 +43,11 @@ namespace MVCIdentity
                     options.SignIn.RequireConfirmedAccount = true;
                 })
                 .AddEntityFrameworkStores<ApplicationDbContext>();
+                //.AddDefaultTokenProviders(); // Needed for Identity Pages
 
             services.AddControllersWithViews();
+
+            //services.AddRazorPages(); // Needed for Identity Pages
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -80,6 +83,8 @@ namespace MVCIdentity
                 endpoints.MapControllerRoute(
                     name: "default",
                     pattern: "{controller=Home}/{action=Index}/{id?}");
+
+                //endpoints.MapRazorPages(); // Needed for Identity Pages
             });
         }
     }
